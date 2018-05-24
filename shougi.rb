@@ -117,7 +117,8 @@ class ShougiApp
     display_ban
     regular_message
     timer
-    puts @space_3 + @message_g_1
+    puts
+    puts @space_3 * 2 + @message_g_1
     a = gets.to_i
     @t.kill
   end

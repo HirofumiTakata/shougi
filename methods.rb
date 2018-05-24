@@ -257,11 +257,14 @@ module Methods
   def timer
     @t = Thread.new do
     time_start = Time.new
-    limit = time_start + 30
-
+    pre_limit  = time_start + 24
+    limit      = time_start + 30
     loop do
     progress = Time.new
-    next unless progress > limit
+    if pre_limit < progress
+      [*(1..5)].reverse.each { |t| sleep(1); print "#{t}\r" }
+    end
+    next unless limit < progress
     puts
     puts @space_3 * 4 + "＜＜ タイムアウト！！ ＞＞"
     puts
