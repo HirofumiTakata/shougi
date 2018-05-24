@@ -24,10 +24,10 @@ class ShougiApp
     puts @space_3 + @message_2_3
     puts @space_3 + @box_line
     case gets.to_i
-    when 1; game
+    when 1; hirate
     when 2; options
     when 3; start
-    else  ; game
+    else  ; hirate
     end
   end
 
@@ -102,9 +102,9 @@ class ShougiApp
     puts @space_3 + @message_2_2_4_3
     puts @space_3 + @box_line
     case gets.to_i
-    when 1; game
-    when 2; handicap_6_1
-    when 3; handicap_6_2
+    when 1; handicap_6_1
+    when 2; handicap_6_2
+    when 3; options
     else  ; start
     end
   end
