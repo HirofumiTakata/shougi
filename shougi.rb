@@ -116,6 +116,10 @@ class ShougiApp
   def game
     display_ban
     regular_message
+    timer
+    puts @space_3 + @message_g_1
+    a = gets.to_i
+    @t.kill
   end
 #-------------------------------------------------------------------------------
 end

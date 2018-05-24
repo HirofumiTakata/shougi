@@ -253,5 +253,22 @@ module Methods
   end
 #-------------------------------------------------------------------------------
 
+#----Timer（持ち時間）早打ち将棋---------------------------------------------------
+  def timer
+    @t = Thread.new do
+    time_start = Time.new
+    limit = time_start + 30
+
+    loop do
+    progress = Time.new
+    next unless progress > limit
+    puts
+    puts @space_3 * 4 + "＜＜ タイムアウト！！ ＞＞"
+    puts
+    break
+    end
+    end
+  end
+#-------------------------------------------------------------------------------
 
 end
