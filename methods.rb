@@ -63,4 +63,36 @@ module Methods
    +---+---+---+---+---+---+---+---+---+
 =end
 #-------------------------------------------------------------------------------
+
+#----将棋盤へ駒の描画（ハンデ戦１０のパターンを含む）-----------------------------------
+  def handicap_1_1f
+  end
+
+  def handicap_1_2f
+  end
+
+  def handicap_1_1h
+  end
+
+  def handicap_1_2h
+  end
+
+  def handicap_2_1
+  end
+
+  def handicap_2_2
+  end
+
+  def handicap_4_1
+  end
+
+  def handicap_4_2
+  end
+
+  def handicap_6_1
+  end
+
+  def handicap_6_2
+  end
+
 end
