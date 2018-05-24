@@ -65,68 +65,182 @@ module Methods
 #-------------------------------------------------------------------------------
 
 #----将棋盤へ駒の描画（ハンデ戦１０のパターンを含む）-----------------------------------
-  def hirate
+  def standard
     # 後手陣のコマ
-    [91, 11].each { |n| @b[n] = "^香" }
-    [81, 21].each { |n| @b[n] = "^桂" }
     [71, 31].each { |n| @b[n] = "^銀" }
     [61, 41].each { |n| @b[n] = "^金" }
-    @b[51] = "^王"
-    @b[22] = "^角"
-    @b[82] = "^飛"
     [93, 83, 73, 63, 53, 43, 33, 23, 13].each { |n| @b[n] = "^歩" }
-
     # 先手陣のコマ
     [97, 87, 77, 67, 57, 47, 37, 27, 17].each { |n| @b[n] = "歩\s" }
-    @b[88] = "角\s"
-    @b[28] = "飛\s"
-    [99, 19].each { |n| @b[n] = "香\s" }
-    [89, 29].each { |n| @b[n] = "桂\s" }
     [79, 39].each { |n| @b[n] = "銀\s" }
     [69, 49].each { |n| @b[n] = "金\s" }
-    @b[59] = "玉\s"
-
-    game
+    return
   end
 
-  def handicap_1_1f
-    game
+  def kyousha
+    # 後手陣のコマ
+    [91, 11].each { |n| @b[n] = "^香" }
+    # 先手陣のコマ
+    [99, 19].each { |n| @b[n] = "香\s" }
+    return
   end
 
-  def handicap_1_2f
-    game
-  end
-
-  def handicap_1_1h
-    game
-  end
-
-  def handicap_1_2h
-    game
-  end
-
-  def handicap_2_1
-    game
-  end
-
-  def handicap_2_2
-    game
-  end
-
-  def handicap_4_1
-    game
-  end
-
-  def handicap_4_2
-    game
+  def keima
+    # 後手陣のコマ
+    [81, 21].each { |n| @b[n] = "^桂" }
+    # 先手陣のコマ
+    [89, 29].each { |n| @b[n] = "桂\s" }
+    return
   end
 
   def handicap_6_1
+    standard
+    # 後手陣のコマ
+    [91, 11].each { |n| @b[n] = "^香" }
+    [81, 21].each { |n| @b[n] = "^桂" }
+    @b[51] = "^玉"
+    @b[22] = "^角"
+    @b[82] = "^飛"
+    # 先手陣のコマ
+    @b[59] = "王\s"
     game
   end
 
   def handicap_6_2
+    standard
+    # 後手陣のコマ
+    @b[51] = "^王"
+    # 先手陣のコマ
+    @b[88] = "角\s"
+    @b[28] = "飛\s"
+    [99, 19].each { |n| @b[n] = "香\s" }
+    [89, 29].each { |n| @b[n] = "桂\s" }
+    @b[59] = "玉\s"
     game
   end
+
+  def handicap_4_1
+    standard
+    kyousha
+    # 後手陣のコマ
+    [81, 21].each { |n| @b[n] = "^桂" }
+    @b[51] = "^玉"
+    @b[22] = "^角"
+    @b[82] = "^飛"
+    # 先手陣のコマ
+    @b[59] = "王\s"
+    game
+  end
+
+  def handicap_4_2
+    standard
+    kyousha
+    # 後手陣のコマ
+    @b[51] = "^王"
+    # 先手陣のコマ
+    @b[88] = "角\s"
+    @b[28] = "飛\s"
+    @b[59] = "玉\s"
+    [89, 29].each { |n| @b[n] = "桂\s" }
+    game
+  end
+
+  def handicap_2_1
+    standard
+    kyousha
+    keima
+    # 後手陣のコマ
+    @b[51] = "^玉"
+    @b[22] = "^角"
+    @b[82] = "^飛"
+    # 先手陣のコマ
+    @b[59] = "王\s"
+    game
+  end
+
+  def handicap_2_2
+    standard
+    kyousha
+    keima
+    # 後手陣のコマ
+    @b[51] = "^王"
+    # 先手陣のコマ
+    @b[88] = "角\s"
+    @b[28] = "飛\s"
+    @b[59] = "玉\s"
+    game
+  end
+
+  def handicap_1_1f
+    standard
+    kyousha
+    keima
+    # 後手陣のコマ
+    @b[51] = "^玉"
+    @b[22] = "^角"
+    @b[82] = "^飛"
+    # 先手陣のコマ
+    @b[88] = "角\s"
+    @b[59] = "王\s"
+    game
+  end
+
+  def handicap_1_2f
+    standard
+    kyousha
+    keima
+    # 後手陣のコマ
+    @b[51] = "^王"
+    @b[22] = "^角"
+    # 先手陣のコマ
+    @b[88] = "角\s"
+    @b[28] = "飛\s"
+    @b[59] = "玉\s"
+    game
+  end
+
+  def handicap_1_1h
+    standard
+    kyousha
+    keima
+    # 後手陣のコマ
+    @b[51] = "^玉"
+    @b[22] = "^角"
+    @b[82] = "^飛"
+    # 先手陣のコマ
+    @b[28] = "飛\s"
+    @b[59] = "王\s"
+    game
+  end
+
+  def handicap_1_2h
+    standard
+    kyousha
+    keima
+    # 後手陣のコマ
+    @b[51] = "^王"
+    @b[22] = "^角"
+    # 先手陣のコマ
+    @b[88] = "角\s"
+    @b[28] = "飛\s"
+    @b[59] = "玉\s"
+    game
+  end
+
+  def hirate
+    standard
+    kyousha
+    keima
+    # 後手陣のコマ
+    @b[51] = "^王"
+    @b[22] = "^角"
+    @b[82] = "^飛"
+    # 先手陣のコマ
+    @b[88] = "角\s"
+    @b[28] = "飛\s"
+    @b[59] = "玉\s"
+    game
+  end
+#-------------------------------------------------------------------------------
 
 end
