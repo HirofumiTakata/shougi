@@ -58,10 +58,10 @@ class ShougiApp
     puts @space_3 + @message_2_2_1_5
     puts @space_3 + @box_line
     case gets.to_i
-    when 1; handicap_1
-    when 2; handicap_1
-    when 3; handicap_1
-    when 4; handicap_1
+    when 1; handicap_1_1f
+    when 2; handicap_1_2f
+    when 3; handicap_1_1h
+    when 4; handicap_1_2h
     when 5; options
     else  ; start
     end
@@ -74,8 +74,8 @@ class ShougiApp
     puts @space_3 + @message_2_2_2_3
     puts @space_3 + @box_line
     case gets.to_i
-    when 1; handicap_2
-    when 2; handicap_2
+    when 1; handicap_2_1
+    when 2; handicap_2_2
     when 3; options
     else  ; start
     end
@@ -88,8 +88,8 @@ class ShougiApp
     puts @space_3 + @message_2_2_3_3
     puts @space_3 + @box_line
     case gets.to_i
-    when 1; handicap_4
-    when 2; handicap_4
+    when 1; handicap_4_1
+    when 2; handicap_4_2
     when 3; options
     else  ; start
     end
@@ -103,17 +103,19 @@ class ShougiApp
     puts @space_3 + @box_line
     case gets.to_i
     when 1; game
-    when 2; handicap_6
-    when 3; handicap_6
+    when 2; handicap_6_1
+    when 3; handicap_6_2
     else  ; start
     end
   end
 #-------------------------------------------------------------------------------
 
+#----将棋の盤・駒の表示------------------------------------------------------------
   def game
+
     display_ban
   end
-
+#-------------------------------------------------------------------------------
 end
 
 game = ShougiApp.new
