@@ -1,6 +1,8 @@
 class ShougiApp
+  require './validations'
   require './methods'
   require './variable'
+  include Validations
   include Methods
   include Variable
 
@@ -112,8 +114,8 @@ class ShougiApp
 
 #----将棋の盤・駒の表示------------------------------------------------------------
   def game
-
     display_ban
+    regular_message
   end
 #-------------------------------------------------------------------------------
 end
