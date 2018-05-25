@@ -147,10 +147,8 @@ class ShougiApp
   def phase_2
     puts
     puts @space_3 * 2 + @message_g_1
-    puts
     @before_p = gets.to_i
     @t.kill if @t
-    finish
     phase_3
   end
 #-------------------------------------------------------------------------------
@@ -191,11 +189,10 @@ class ShougiApp
 
 #----ステージ６（駒を配置する場所の入力）---------------------------------------------
   def phase_6
-    puts
-    puts @space_3 * 2 + @message_g_2
-    puts
+    puts @space_3 * 2 + "→ ＜\s#{@b[@before_p]}\s＞を置く位置を入力してください"
+    puts @space_3 * 2 + @message_g_2 unless @time_battle_switch
     @after_p = gets.to_i
-    finish
+    phase_2 if @after_p == 3
     phase_7
   end
 #-------------------------------------------------------------------------------
@@ -203,12 +200,12 @@ class ShougiApp
 #----ステージ７（入力の妥当性をチェック）---------------------------------------------
   def phase_7
     finish
-    if @before_p < 11 || 99 < @before_p
+    if @after_p < 11 || 99 < @after_p
       puts @error_1
-      @before_p = gets.to_i; phase_7
-    elsif @before_p.to_s.include?("0") #20,30,40,50,60,70,80を除く
+      @after_p = gets.to_i; phase_7
+    elsif @after_p.to_s.include?("0") #20,30,40,50,60,70,80を除く
       puts @error_1
-      @before_p = gets.to_i; phase_7
+      @after_p = gets.to_i; phase_7
     else
       validate_3
     end
@@ -237,10 +234,10 @@ class ShougiApp
     case gets.to_i
     when 1; exit
     when 2
-      if @log[1].include?("2")
+      if @log[1].include?("2") #メソッドの呼び出し元が phase_2の場合
         @log.clear
         phase_2
-      elsif @log[1].include?("6")
+      elsif @log[1].include?("6") #メソッドの呼び出し元が phase_6の場合
         @log.clear
         phase_6
       else
