@@ -253,19 +253,30 @@ module Methods
   end
 #-------------------------------------------------------------------------------
 
+#----Timer表示------------------------------------------------------------------
+  def display_time
+      [*(11..30)].reverse.each do |t|
+        sleep(1)
+        print @space_3 * 2 + @message_r_2 + "#{t}\r"
+      end
+      [*(0..9),"十秒前！！"].reverse.each do |t|
+        sleep(1)
+        print @space_3 * 3 + "#{t}\r"
+      end
+  end
+#-------------------------------------------------------------------------------
+
 #----Timer（持ち時間）早打ち将棋---------------------------------------------------
   def timer
     @t = Thread.new do
     time_start = Time.new
-    pre_limit  = time_start + 24
     limit      = time_start + 30
+    time = method(:display_time)
+    time.call
     loop do
     progress = Time.new
-    if pre_limit < progress
-      [*(1..5)].reverse.each { |t| sleep(1); print "#{t}\r" }
-    end
     next unless limit < progress
-    puts
+    puts "\n\n"
     puts @space_3 * 4 + "＜＜ タイムアウト！！ ＞＞"
     puts
     break
