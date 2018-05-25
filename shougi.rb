@@ -218,7 +218,7 @@ class ShougiApp
 
 #----ステージ７（盤へ駒の描画）-----------------------------------------------------
   def phase_8
-    get_friend unless @b[@after_p] = "\s\s\s"
+    get_partner unless @b[@after_p] == "\s\s\s"
     @b[@after_p]  = @b[@before_p]
     @b[@before_p] = "\s\s\s"
     game

@@ -269,9 +269,9 @@ module Methods
   def regular_message
     m = method(:fir_or_sec)
     puts @space_3 * 2 + m.call + "\s" + @message_r_1
-    unless @motigoma_1.empty? || @motigoma_2.empty?
-      puts @space_3 + "先手持駒\s" + @motigoma_1
-      puts @space_3 + "後手持駒\s" + @motigoma_2
+    unless @motigoma_1.empty? && @motigoma_2.empty?
+      puts @space_3 * 2 + "先手持駒\s#{@motigoma_1}"
+      puts @space_3 * 2 + "後手持駒\s#{@motigoma_2}"
     end
   end
 #-----------------------------------------------------------------
@@ -304,6 +304,17 @@ module Methods
       puts
       break
     end
+    end
+  end
+#-----------------------------------------------------------------
+
+#----持駒を獲得（持駒変数へ駒を格納）-----------------------------------
+  def get_partner
+    #獲得した駒が成駒だった場合、元（なる前の状態）に戻す。
+    case @fs
+    when 1; @motigoma_1 << @b[@after_p].gsub(/\^/, "")
+    when 2; @motigoma_2 << @b[@after_p].gsub(/\s/, "")
+    else
     end
   end
 #-----------------------------------------------------------------
