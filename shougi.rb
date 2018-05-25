@@ -114,8 +114,8 @@ class ShougiApp
   end
 
   def time_battle
-    @time_bttle_switch = true
-    game
+    @time_battle_switch = true
+    hirate
   end
 
 #-------------------------------------------------------------------------------
@@ -123,6 +123,7 @@ class ShougiApp
 #----将棋の盤・駒の表示------------------------------------------------------------
   def game
     @count += 1
+    tied_game if 180 < @count #とりあえず。入玉や持駒の点数を確かめる必要がある。
     @count.even? ? @fs = 1 : @fs = 2
     if @count == 0
       display_ban
@@ -149,16 +150,14 @@ class ShougiApp
     puts
     @before_p = gets.to_i
     @t.kill if @t
-    case @before_p
-    when 1; alert_window("本当に投了しますか？")
-    when 2; alert_window("本当に終了しますか？")
-    else  ; phase_3
-    end
+    finish
+    phase_3
   end
 #-------------------------------------------------------------------------------
 
 #----ステージ３（入力の妥当性をチェック）---------------------------------------------
   def phase_3
+    finish
     if @before_p < 11 || 99 < @before_p
       puts @error_1
       @before_p = gets.to_i; phase_3
@@ -196,36 +195,57 @@ class ShougiApp
     puts @space_3 * 2 + @message_g_2
     puts
     @after_p = gets.to_i
-    case @after_p
-    when 1; alert_window("本当に投了しますか？")
-    when 2; alert_window("本当に終了しますか？")
-    else  ; phase_7
-    end
+    finish
     game
   end
 #-------------------------------------------------------------------------------
 
-#----ステージ６（駒を配置する場所の入力）---------------------------------------------
+#----ステージ７（入力の妥当性をチェック）---------------------------------------------
   def phase_7
+    finish
+    if @before_p < 11 || 99 < @before_p
+      puts @error_1
+      @before_p = gets.to_i; phase_7
+    elsif @before_p.to_s.include?("0") #20,30,40,50,60,70,80を除く
+      puts @error_1
+      @before_p = gets.to_i; phase_7
+    else
+      validate_3
+    end
   end
 #-------------------------------------------------------------------------------
 
 #----投了or終了------------------------------------------------------------------
   def alert_window(message)
+    log = caller
+    @log.push(log).flatten!
     puts @space_3 + @box_line
     puts @space_3 + "|            " + message + "               |"
     puts @space_3 + "|             1 : YES   2: NO                   |"
     puts @space_3 + @box_line
     case gets.to_i
     when 1; exit
-    when 2; phase_2
+    when 2
+      if @log[1].include?("2")
+        @log.clear
+        phase_2
+      elsif @log[1].include?("6")
+        @log.clear
+        phase_6
+      else
+        phase_2
+      end
     else  ; exit
     end
   end
 #-------------------------------------------------------------------------------
 
-
-
+#----持将棋による引き分け----------------------------------------------------------
+  def tied_game
+    puts @space_3 + @message_g_6
+    exit
+  end
+#-------------------------------------------------------------------------------
 end
 
 game = ShougiApp.new
