@@ -2,6 +2,7 @@ module Methods
 #---将棋の盤の表示----------------------------------------------------------------
   def display_ban
 
+    @b.each_with_index { |n, i| puts "#{n}:#{i}" }
     line_1_1 = ""
     line_1_2 = ""
     line_1_3 = ""
@@ -22,7 +23,7 @@ module Methods
     [98,88,78,68,58,48,38,28,18].each { |n| line_1_8 << "|" + @b[n] }
     [99,89,79,69,59,49,39,29,19].each { |n| line_1_9 << "|" + @b[n] }
 
-    @shougi_ban = <<-DISPLAY
+    shougi_ban = <<-DISPLAY
         9   8   7   6   5   4   3   2   1
       #{@line_1}
       #{line_1_1}| 一
@@ -45,7 +46,7 @@ module Methods
       #{@line_1}
     DISPLAY
 
-    puts @shougi_ban
+    puts shougi_ban
     return
 
   end

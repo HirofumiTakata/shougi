@@ -126,7 +126,7 @@ class ShougiApp
     if @count == 0
       display_ban
     else
-      @b.reverse
+      @b = @b.reverse
       display_ban
     end
     phase_1
@@ -142,6 +142,9 @@ class ShougiApp
     puts
     @first_p = gets.to_i
     @t.kill if @t
+    case @first_p
+    when 1; exit
+    end
     game
   end
 #-------------------------------------------------------------------------------
