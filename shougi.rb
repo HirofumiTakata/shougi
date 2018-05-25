@@ -123,6 +123,7 @@ class ShougiApp
 #----将棋の盤・駒の表示------------------------------------------------------------
   def game
     @count += 1
+    @count.even? ? @fs = 1 : @fs = 2
     if @count == 0
       display_ban
     else
@@ -137,9 +138,9 @@ class ShougiApp
   def phase_1
     regular_message
     timer if @time_battle_switch
-    puts
+    puts @fs
     puts @space_3 * 2 + @message_g_1
-    puts
+    puts @count
     @first_p = gets.to_i
     @t.kill if @t
     case @first_p
