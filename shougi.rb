@@ -147,9 +147,9 @@ class ShougiApp
     puts
     puts @space_3 * 2 + @message_g_1
     puts
-    @first_p = gets.to_i
+    @before_p = gets.to_i
     @t.kill if @t
-    case @first_p
+    case @before_p
     when 1; alert_window("本当に投了しますか？")
     when 2; alert_window("本当に終了しますか？")
     else  ; phase_3
@@ -159,10 +159,12 @@ class ShougiApp
 
 #----ステージ３（入力の妥当性をチェック）---------------------------------------------
   def phase_3
-    if @first_p < 11 || 99 < @first_p
+    if @before_p < 11 || 99 < @before_p
       puts @error_1
-    elsif @first_p.to_s.include?("0") #20,30,40,50,60,70,80を除く
+      @before_p = gets.to_i; phase_3
+    elsif @before_p.to_s.include?("0") #20,30,40,50,60,70,80を除く
       puts @error_1
+      @before_p = gets.to_i; phase_3
     else
       validate_1
     end
@@ -170,11 +172,41 @@ class ShougiApp
   end
 #-------------------------------------------------------------------------------
 
-#----ステージ４（選ばれた駒のチェック）-----------------------------------------------
+#----ステージ４（選ばれた駒のチェック）----------------------------------------------
   def phase_4
     check_1
     #validate_2
+    case @fs
+    when 1; @motigoma_1.empty? ? phase_5 : phase_6
+    when 2; @motigoma_2.empty? ? phase_5 : phase_6
+    else  ; puts "エラーでーす！"
+    end
+  end
+#-------------------------------------------------------------------------------
+
+#----ステージ５（持駒があれば使用する選択肢を表示）------------------------------------
+  def phase_5
+    phase_6
+  end
+#-------------------------------------------------------------------------------
+
+#----ステージ６（駒を配置する場所の入力）---------------------------------------------
+  def phase_6
+    puts
+    puts @space_3 * 2 + @message_g_2
+    puts
+    @after_p = gets.to_i
+    case @after_p
+    when 1; alert_window("本当に投了しますか？")
+    when 2; alert_window("本当に終了しますか？")
+    else  ; phase_7
+    end
     game
+  end
+#-------------------------------------------------------------------------------
+
+#----ステージ６（駒を配置する場所の入力）---------------------------------------------
+  def phase_7
   end
 #-------------------------------------------------------------------------------
 

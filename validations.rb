@@ -2,12 +2,18 @@ module Validations
 
 #----自分の駒を選んでいるかどうか確認------------------------------------------------
   def validate_1
-    if @fs == 1 && @b[@first_p].include?("^")
+    #先手が後手の駒を選ぶとエラー
+    if @fs == 1 && @b[@before_p].include?("^")
       puts @error_2
-    elsif @fs == 2 && @b[@first_p] =~ /^\p{Han}|^\p{Hiragana}/
+      @before_p = gets.to_i; validate_1
+    #後手が先手の駒を選ぶとエラー
+    elsif @fs == 2 && @b[@before_p] =~ /^\p{Han}|^\p{Hiragana}/
       puts @error_2
-    elsif @b[@first_p] == "\s\s\s"
+      @before_p = gets.to_i; validate_1
+    #何もないマスを選ぶとエラー
+    elsif @b[@before_p] == "\s\s\s"
       puts @error_2
+      @before_p = gets.to_i; validate_1
     else
     end
   end
@@ -20,7 +26,7 @@ module Validations
 
 #----選んだ駒が何かの判別----------------------------------------------------------
   def check_1
-    case @b[@first_p]
+    case @b[@before_p]
     when /歩/;
     when /香/;
     when /桂/;
