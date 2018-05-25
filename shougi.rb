@@ -40,13 +40,15 @@ class ShougiApp
     puts @space_3 + @message_2_2_3
     puts @space_3 + @message_2_2_4
     puts @space_3 + @message_2_2_5
+    puts @space_3 + @message_2_2_6
     puts @space_3 + @box_line
     case gets.to_i
     when 1; handicap_1
     when 2; handicap_2
     when 3; handicap_4
     when 4; handicap_6
-    when 5; selection
+    when 5; time_battle
+    when 6; selection
     else  ; start
     end
   end
@@ -110,17 +112,37 @@ class ShougiApp
     else  ; start
     end
   end
+
+  def time_battle
+    @time_bttle_switch = true
+    game
+  end
+
 #-------------------------------------------------------------------------------
 
 #----将棋の盤・駒の表示------------------------------------------------------------
   def game
-    display_ban
+    @count += 1
+    if @count == 0
+      display_ban
+    else
+      @b.reverse
+      display_ban
+    end
+    phase_1
+  end
+#-------------------------------------------------------------------------------
+
+#----次のステージ-----------------------------------------------------------------
+  def phase_1
     regular_message
-    timer
+    timer if @time_battle_switch
     puts
     puts @space_3 * 2 + @message_g_1
-    a = gets.to_i
-    @t.kill
+    puts
+    @first_p = gets.to_i
+    @t.kill if @t
+    game
   end
 #-------------------------------------------------------------------------------
 end
