@@ -1,5 +1,5 @@
 class ShougiApp
-  
+
   require './validations'
   require './methods'
   require './variable'
@@ -130,7 +130,7 @@ class ShougiApp
     if @count == 0
       display_ban
     else
-      @b = @b.reverse
+      @b = @b.reverse #先手後手で将棋盤を上下させる
       display_ban
     end
     phase_1
@@ -151,9 +151,9 @@ class ShougiApp
     puts @space_3 * 2 + @message_g_1
     case @fs
     when 1
-      puts @space_3 * 2 + @message_g_ unless @motigoma_1.empty?
+      puts @space_3 * 2 + @message_g_3 unless @motigoma_1.empty?
     when 2
-      puts @space_3 * 2 + @message_g_ unless @motigoma_2.empty?
+      puts @space_3 * 2 + @message_g_3 unless @motigoma_2.empty?
     end
     @before_p = gets.to_i
     @t.kill if @t
@@ -182,11 +182,12 @@ class ShougiApp
   def phase_4
     check_1
     #validate_2
+    #validate_3
     case @fs
-    when 1; @motigoma_1.empty? ? phase_5 : phase_6
-    when 2; @motigoma_2.empty? ? phase_5 : phase_6
-    else  ; puts "エラーでーす！"
+    when 1; phase_5 unless @motigoma_1.empty?
+    when 2; phase_5 unless @motigoma_2.empty?
     end
+    phase_6
   end
 #------------------------------------------------------------------
 

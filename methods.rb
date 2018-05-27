@@ -7,6 +7,13 @@ module Methods
   end
 #-----------------------------------------------------------------
 
+#----文字に色をつける------------------------------------------------
+  def red_color(string)
+    converter = "\e[31m\e[0m"
+    converter.insert(5, string)
+  end
+#-----------------------------------------------------------------
+
 #----文字と背景色を反転させる-----------------------------------------
   def reverse_color(string)
     converter = "\e[7m\e[0m"
@@ -314,8 +321,7 @@ module Methods
     @t = Thread.new do
     time_start = Time.new
     limit      = time_start + 30
-    time = method(:display_time)
-    time.call
+    display_time
     loop do
       progress = Time.new
       next unless limit < progress
@@ -332,8 +338,10 @@ module Methods
   def get_partner
     #獲得した駒が成駒だった場合、元（なる前の状態）に戻す。
     case @fs
-    when 1; @motigoma_1 << @b[@after_p].gsub(/#/, "")
-    when 2; @motigoma_2 << @b[@after_p].gsub(/\s/, "")
+    when 1
+      @motigoma_1 << @b[@after_p].gsub(/[^\p{Han}\p{Hiragana}]/, "")
+    when 2
+      @motigoma_2 << @b[@after_p].gsub(/\s/, "")
     else
     end
   end
