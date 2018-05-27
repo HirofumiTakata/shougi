@@ -15,6 +15,13 @@ module Methods
 #-----------------------------------------------------------------
 
 #----文字に色をつける------------------------------------------------
+  def blue_color(string)
+    converter = "\e[36m\e[0m"
+    converter.insert(5, string)
+  end
+#-----------------------------------------------------------------
+
+#----文字に色をつける------------------------------------------------
   def yellow_color(string)
     converter = "\e[33m\e[0m"
     converter.insert(5, string)
@@ -463,14 +470,36 @@ module Methods
   def zone_reverse
     case @b[@after_p]
     when /歩/,/香/,/桂/,/銀/,/角/,/飛/
-      turn_army
+      turn_window
     end
   end
 #-----------------------------------------------------------------
 
 #----駒を成りますか？の表示-------------------------------------------
+  def turn_window
+    b = method(:blue_color)
+    #validate 歩、香車、桂馬の場合、強制的に成る場合は選択肢を無視
+    puts @space_3 + (@box_line)
+    puts @space_3 * 3 + b.call(@message_g_7)
+    puts @space_3 + (@box_line)
+    case gets.to_i
+    when 1; return
+    else  ; turn_army
+    end
+  end
+#-----------------------------------------------------------------
+
+#----駒を成る工程---------------------------------------------------
   def turn_army
-    puts 
+    r = method(:reverse_color)
+    case @b[@after_p]
+    when /歩/; @b[@after_p] = r.call(@b[@after_p].gsub(/歩/, "と"))
+    when /香/; @b[@after_p] = r.call(@b[@after_p].gsub(/香/, "よ"))
+    when /桂/; @b[@after_p] = r.call(@b[@after_p].gsub(/桂/, "け"))
+    when /銀/; @b[@after_p] = r.call(@b[@after_p].gsub(/銀/, "ぎ"))
+    when /角/; @b[@after_p] = r.call(@b[@after_p].gsub(/角/, "馬"))
+    when /飛/; @b[@after_p] = r.call(@b[@after_p].gsub(/飛/, "龍"))
+    end
   end
 #-----------------------------------------------------------------
 
