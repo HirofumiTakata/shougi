@@ -226,10 +226,12 @@ class ShougiApp
 
 #----ステージ７（盤へ駒の描画）----------------------------------------
   def phase_7
+    who_before = @b[@after_p]
     get_partner unless @b[@after_p] == "\s\s\s"
     @b[@after_p]  = @b[@before_p]
     zone_reverse if @after_p.to_s.match(/\d[123]/)
     @b[@before_p] = "\s\s\s"
+    record(who_before)
     game
   end
 #------------------------------------------------------------------
@@ -254,6 +256,7 @@ class ShougiApp
       else
         phase_2
       end
+    when 3; show_records
     else  ; exit
     end
   end

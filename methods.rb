@@ -36,6 +36,23 @@ module Methods
   end
 #-----------------------------------------------------------------
 
+#----半角数字 → 漢数字の符号へ----------------------------------------
+  def convert_num(num)
+    num.to_s.match(/\d$/)
+    case $~[0].to_i
+    when 1; num.to_s.sub(/\d$/, "一")
+    when 2; num.to_s.sub(/\d$/, "二")
+    when 3; num.to_s.sub(/\d$/, "三")
+    when 4; num.to_s.sub(/\d$/, "四")
+    when 5; num.to_s.sub(/\d$/, "五")
+    when 6; num.to_s.sub(/\d$/, "六")
+    when 7; num.to_s.sub(/\d$/, "七")
+    when 8; num.to_s.sub(/\d$/, "八")
+    when 9; num.to_s.sub(/\d$/, "九")
+    end
+  end
+#-----------------------------------------------------------------
+
 #----先手か後手かスクラムマスターか------------------------------------
   def fir_or_sec
     case @fs
@@ -500,6 +517,50 @@ module Methods
     when /角/; @b[@after_p] = r.call(@b[@after_p].gsub(/角/, "馬"))
     when /飛/; @b[@after_p] = r.call(@b[@after_p].gsub(/飛/, "龍"))
     end
+  end
+#-----------------------------------------------------------------
+
+#----棋譜を刻む-----------------------------------------------------
+  def record(who_before)
+    after_p = Marshal.load(Marshal.dump(@after_p))
+    convert = method(:convert_num)
+    picked = ""
+    koma   = ""
+    turned = ""
+    num    = ""
+    case @fs
+    when 1
+      if who_before != "\s\s\s"
+        picked = "同"
+      else
+        picked = ""
+      end
+      koma = @b[@after_p].gsub(/[^\p{Han}\p{Hiragana}]/, "")
+      num  = convert.call(after_p)
+      puts after_p
+      @records << "▲\s" + num + "\s" + picked + koma + turned
+    when 2
+      if who_before != "\s\s\s"
+        picked = "同"
+      else
+        picked = ""
+      end
+      koma = @b[@after_p].gsub(/[^\p{Han}\p{Hiragana}]/, "")
+      num  = convert.call(110 - after_p)
+      @records << "▽\s" + num + "\s" + picked + koma + turned
+    end
+    #同〜が間違っている。↑リファクタリング。
+  end
+#-----------------------------------------------------------------
+
+#----棋譜を表示-----------------------------------------------------
+  def show_records
+    puts @space_3 + @box_line
+    @records.each.with_index(1) do |r, i|
+      puts @space_3 * 2 + i.to_s + "：" + r
+    end
+    puts @space_3 + @box_line
+    exit
   end
 #-----------------------------------------------------------------
 
