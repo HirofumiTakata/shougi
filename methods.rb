@@ -376,8 +376,9 @@ module Methods
       puts @space_3 * 2 + @motigoma_list[i..(i + 4)].join("\s")
       i += 4
     end
-    puts @space_3 * 2 + @message_g_4
+    puts @space_3 * 12 + @message_g_4
     puts @space_3 + m.call(@box_line)
+    puts @space_3 * 2 + @message_g_5
     choice_motigoma
   end
 #-----------------------------------------------------------------
@@ -387,16 +388,89 @@ module Methods
     choice = gets.to_i
     max    = @motigoma_list.length
     r      = method(:red_color)
+    y      = method(:yellow_color)
     if choice == 0
       phase_2
     elsif choice < 1 || max < choice
-      puts r.call("＊１〜#{max}までの数値を入力して下さい＊")
+      if max == 1
+        puts r.call("＊１を入力して下さい＊")
+      else
+        puts r.call("＊1~#{max}までの数値を入力して下さい＊")
+      end
       choice_motigoma
     else
-      phase_2
     end
-    @manage_outsider = choice + 1
+    @manage_outsider = choice - 1
+    print @space_3 * 2
+    print y.call(@motigoma_list[@manage_outsider].gsub(/.：/, ""))
     deploy_player
+  end
+#-----------------------------------------------------------------
+
+#----持駒を配備する-------------------------------------------------
+  def deploy_player
+    r = method(:red_color)
+    puts "\s" + @message_g_6
+    @after_p = gets.to_i
+    finish
+    if @after_p < 11 || 99 < @after_p
+      puts r.call(@error_1)
+      @after_p = gets.to_i; deploy_player
+    elsif @after_p.to_s.include?("0") #20,30,40,50,60,70,80を除く
+      puts r.call(@error_1)
+      @after_p = gets.to_i; deploy_player
+    else
+    end
+    #validate　歩、香車、桂馬は盤上の端っこには置けない制限
+    entry_player
+  end
+#-----------------------------------------------------------------
+
+#----持駒を使用した際の画面への描画------------------------------------
+  def entry_player
+    r = method(:red_color)
+    c = method(:convert_motigoma)
+    if @b[@after_p] == "\s\s\s"
+      @b[@after_p] = c.call(@motigoma_list[@manage_outsider])
+    else
+      puts r.call(@error_4)
+      @after_p = gets.to_i; deploy_player
+    end
+    case @fs
+    when 1; @motigoma_1.delete_at(@manage_outsider)
+    when 2; @motigoma_2.delete_at(@manage_outsider)
+    end
+    @motigoma_list.clear
+    @manage_outsider = "CEO"
+    game
+  end
+#-----------------------------------------------------------------
+
+#----持駒を盤上へ描画する際の表示の変換--------------------------------
+  def convert_motigoma(motigoma)
+    motigoma = motigoma.gsub(/.：/, "")
+    case @fs
+    when 1
+      motigoma << "\s"
+    when 2
+      go_over = "\e[35m#\e[0m"
+      go_over.insert(6, motigoma)
+    end
+  end
+#-----------------------------------------------------------------
+
+#----成駒になるゾーン（奧三列）に入った時に成ることができる駒かどうか--------
+  def zone_reverse
+    case @b[@after_p]
+    when /歩/,/香/,/桂/,/銀/,/角/,/飛/
+      turn_army
+    end
+  end
+#-----------------------------------------------------------------
+
+#----駒を成りますか？の表示-------------------------------------------
+  def turn_army
+    puts 
   end
 #-----------------------------------------------------------------
 

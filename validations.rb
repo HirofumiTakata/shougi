@@ -2,19 +2,19 @@ module Validations
 
 #----自分の駒を選んでいるかどうか確認------------------------------------------------
   def validate_1
-    color = method(:red_color)
+    r = method(:red_color)
     finish
     #先手が後手の駒を選ぶとエラー
     if @fs == 1 && @b[@before_p].include?("#")
-      puts color.call(@error_2)
+      puts r.call(@error_2)
       @before_p = gets.to_i; validate_1
     #後手が先手の駒を選ぶとエラー
     elsif @fs == 2 && @b[@before_p] =~ /^\p{Han}|^\p{Hiragana}/
-      puts color.call(@error_2)
+      puts r.call(@error_2)
       @before_p = gets.to_i; validate_1
     #何もないマスを選ぶとエラー
     elsif @b[@before_p] == "\s\s\s"
-      puts color.call(@error_2)
+      puts r.call(@error_2)
       @before_p = gets.to_i; validate_1
     else
     end

@@ -168,13 +168,14 @@ class ShougiApp
 
 #----ステージ３（入力の妥当性をチェック）--------------------------------
   def phase_3
+    r = method(:red_color)
     outsider if @before_p == 4
     finish
     if @before_p < 11 || 99 < @before_p
-      puts @error_1
+      puts r.call(@error_1)
       @before_p = gets.to_i; phase_3
     elsif @before_p.to_s.include?("0") #20,30,40,50,60,70,80を除く
-      puts @error_1
+      puts r.call(@error_1)
       @before_p = gets.to_i; phase_3
     else
       validate_1
@@ -208,12 +209,13 @@ class ShougiApp
 
 #----ステージ６（入力の妥当性をチェック）--------------------------------
   def phase_6
+    r = method(:red_color)
     finish
     if @after_p < 11 || 99 < @after_p
-      puts @error_1
+      puts r.call(@error_1)
       @after_p = gets.to_i; phase_7
     elsif @after_p.to_s.include?("0") #20,30,40,50,60,70,80を除く
-      puts @error_1
+      puts r.call(@error_1)
       @after_p = gets.to_i; phase_7
     else
       validate_3
@@ -226,11 +228,11 @@ class ShougiApp
   def phase_7
     get_partner unless @b[@after_p] == "\s\s\s"
     @b[@after_p]  = @b[@before_p]
+    zone_reverse if @after_p.to_s.match(/\d[123]/)
     @b[@before_p] = "\s\s\s"
     game
   end
 #------------------------------------------------------------------
-
 
 #----投了or終了-----------------------------------------------------
   def alert_window(message)
@@ -259,7 +261,7 @@ class ShougiApp
 
 #----持将棋による引き分け---------------------------------------------
   def tied_game
-    puts @space_3 + @message_g_6
+    puts @space_3 + @message_g_10
     exit
   end
 #------------------------------------------------------------------
