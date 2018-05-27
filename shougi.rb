@@ -147,13 +147,18 @@ class ShougiApp
 
 #----ステージ２(入力画面・入力終了時点でスレッドを削除）-------------------
   def phase_2
+    m = method(:yellow_color)
     puts
     puts @space_3 * 2 + @message_g_1
     case @fs
     when 1
-      puts @space_3 * 2 + @message_g_3 unless @motigoma_1.empty?
+      unless @motigoma_1.empty?
+        puts @space_3 * 2 + m.call(@message_g_3)
+      end
     when 2
-      puts @space_3 * 2 + @message_g_3 unless @motigoma_2.empty?
+      unless @motigoma_2.empty?
+        puts @space_3 * 2 + m.call(@message_g_3)
+     end
     end
     @before_p = gets.to_i
     @t.kill if @t
@@ -183,32 +188,26 @@ class ShougiApp
     check_1
     #validate_2
     #validate_3
-    case @fs
-    when 1; phase_5 unless @motigoma_1.empty?
-    when 2; phase_5 unless @motigoma_2.empty?
-    end
-    phase_6
+    phase_5
   end
 #------------------------------------------------------------------
 
 #----ステージ５（持駒があれば使用する選択肢を表示）-----------------------
-  def phase_5
-    phase_6
-  end
+
 #------------------------------------------------------------------
 
-#----ステージ６（駒を配置する場所の入力）--------------------------------
-  def phase_6
+#----ステージ５（駒を配置する場所の入力）--------------------------------
+  def phase_5
     puts @space_3 * 2 + "→ ＜\s#{@b[@before_p]}\s＞を置く位置を入力してください"
     puts @space_3 * 2 + @message_g_2 unless @time_battle_switch
     @after_p = gets.to_i
     phase_2 if @after_p == 3
-    phase_7
+    phase_6
   end
 #------------------------------------------------------------------
 
-#----ステージ７（入力の妥当性をチェック）--------------------------------
-  def phase_7
+#----ステージ６（入力の妥当性をチェック）--------------------------------
+  def phase_6
     finish
     if @after_p < 11 || 99 < @after_p
       puts @error_1
@@ -219,12 +218,12 @@ class ShougiApp
     else
       validate_3
     end
-    phase_8
+    phase_7
   end
 #------------------------------------------------------------------
 
 #----ステージ７（盤へ駒の描画）----------------------------------------
-  def phase_8
+  def phase_7
     get_partner unless @b[@after_p] == "\s\s\s"
     @b[@after_p]  = @b[@before_p]
     @b[@before_p] = "\s\s\s"

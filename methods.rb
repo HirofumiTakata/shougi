@@ -14,6 +14,14 @@ module Methods
   end
 #-----------------------------------------------------------------
 
+#----文字に色をつける------------------------------------------------
+  def yellow_color(string)
+    converter = "\e[33m\e[0m"
+    converter.insert(5, string)
+  end
+#-----------------------------------------------------------------
+
+
 #----文字と背景色を反転させる-----------------------------------------
   def reverse_color(string)
     converter = "\e[7m\e[0m"
@@ -295,6 +303,7 @@ module Methods
 #----常時表示させておくメッセージ--------------------------------------
   def regular_message
     m = method(:fir_or_sec)
+    puts
     puts @space_3 * 2 + m.call + "\s" + @message_r_1
     unless @motigoma_1.empty? && @motigoma_2.empty?
       puts @space_3 * 2 + "先手持駒\s#{@motigoma_1}"
@@ -349,21 +358,45 @@ module Methods
 
 #----持駒を使用する際の表示-------------------------------------------
   def outsider
-    @motigoma_list = ""
     case @fs
-    when 1
-      @motigoma_1.each.with_index(1) do |k, i|
-        @motigoma_list << "#{i}：#{k}\s"
-      end
-      @motigoma_list.join("\s")
-    when 2
-      @motigoma_2.each.with_index(1) do |k, i|
-        @motigoma_list << "#{i}：#{k}\s"
-      end
+    when 1; show_motigoma(@motigoma_1)
+    when 2; show_motigoma(@motigoma_2)
     end
-    puts @space_3 + @box_line
-    puts
-    puts @space_3 + @box_line
+  end
+
+  def show_motigoma(motigoma)
+    @motigoma_list = []
+    m = method(:yellow_color)
+    i = 0
+    motigoma.each.with_index(1) do |k, i|
+      @motigoma_list << "#{i}：#{k}"
+    end
+    puts @space_3 + m.call(@box_line)
+    while @motigoma_list[i] do
+      puts @space_3 * 2 + @motigoma_list[i..(i + 4)].join("\s")
+      i += 4
+    end
+    puts @space_3 * 2 + @message_g_4
+    puts @space_3 + m.call(@box_line)
+    choice_motigoma
+  end
+#-----------------------------------------------------------------
+
+#----持駒を選択する-------------------------------------------------
+  def choice_motigoma
+    choice = gets.to_i
+    max    = @motigoma_list.length
+    r      = method(:red_color)
+    if choice == 0
+      phase_2
+    elsif choice < 1 || max < choice
+      puts r.call("＊１〜#{max}までの数値を入力して下さい＊")
+      choice_motigoma
+    else
+      phase_2
+    end
+    @manage_outsider = choice + 1
+    deploy_player
   end
 #-----------------------------------------------------------------
 
