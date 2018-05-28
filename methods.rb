@@ -369,12 +369,22 @@ module Methods
 
 #----持駒を獲得（持駒変数へ駒を格納）-----------------------------------
   def get_partner
-    #獲得した駒が成駒だった場合、元（なる前の状態）に戻す。
+    #獲得した駒が成駒だった場合、元（なる前の状態）に戻す。を実装する
+    case @b[@after_p]
+    when /と/; k = "歩"
+    when /よ/; k = "香"
+    when /け/; k = "桂"
+    when /ぎ/; k = "銀"
+    when /馬/; k = "角"
+    when /龍/; k = "飛"
+    else
+      k = @b[@after_p].gsub(/[^\p{Han}\p{Hiragana}]/, "").strip
+    end
     case @fs
     when 1
-      @motigoma_1 << @b[@after_p].gsub(/[^\p{Han}\p{Hiragana}]/, "")
+      @motigoma_1 << k
     when 2
-      @motigoma_2 << @b[@after_p].gsub(/\s/, "")
+      @motigoma_2 << k
     else
     end
   end
@@ -439,10 +449,10 @@ module Methods
     finish
     if @after_p < 11 || 99 < @after_p
       puts r.call(@error_1)
-      @after_p = gets.to_i; deploy_player
+      deploy_player
     elsif @after_p.to_s.include?("0") #20,30,40,50,60,70,80を除く
       puts r.call(@error_1)
-      @after_p = gets.to_i; deploy_player
+      deploy_player
     else
     end
     #validate　歩、香車、桂馬は盤上の端っこには置けない制限
@@ -458,7 +468,7 @@ module Methods
       @b[@after_p] = c.call(@motigoma_list[@manage_outsider])
     else
       puts r.call(@error_4)
-      @after_p = gets.to_i; deploy_player
+      deploy_player
     end
     case @fs
     when 1; @motigoma_1.delete_at(@manage_outsider)
@@ -466,6 +476,7 @@ module Methods
     end
     @motigoma_list.clear
     @manage_outsider = "CEO"
+    record
     game
   end
 #-----------------------------------------------------------------
@@ -509,6 +520,7 @@ module Methods
 #----駒を成る工程---------------------------------------------------
   def turn_army
     r = method(:reverse_color)
+    @immature = @b[@after_p].gsub(/[^\p{Han}\p{Hiragana}]/, "").strip
     case @b[@after_p]
     when /歩/; @b[@after_p] = r.call(@b[@after_p].gsub(/歩/, "と"))
     when /香/; @b[@after_p] = r.call(@b[@after_p].gsub(/香/, "よ"))
@@ -521,35 +533,40 @@ module Methods
 #-----------------------------------------------------------------
 
 #----棋譜を刻む-----------------------------------------------------
-  def record(who_before)
+  def record
+    koma    = @b[@after_p].gsub(/[^\p{Han}\p{Hiragana}]/, "")
     after_p = Marshal.load(Marshal.dump(@after_p))
     convert = method(:convert_num)
-    picked = ""
-    koma   = ""
-    turned = ""
-    num    = ""
+    m       = method(:magenta_color)
+    covered = ""
+    num     = ""
     case @fs
     when 1
-      if who_before != "\s\s\s"
-        picked = "同"
-      else
-        picked = ""
-      end
-      koma = @b[@after_p].gsub(/[^\p{Han}\p{Hiragana}]/, "")
       num  = convert.call(after_p)
-      puts after_p
-      @records << "▲\s" + num + "\s" + picked + koma + turned
-    when 2
-      if who_before != "\s\s\s"
-        picked = "同"
-      else
-        picked = ""
+      if @records.size != 0
+        covered = "同\s" if @records.last.include?(num)
       end
-      koma = @b[@after_p].gsub(/[^\p{Han}\p{Hiragana}]/, "")
+      #4：▽ 3四 （同）歩
+      @records << "▲\s" + num + "\s" + covered + koma
+    when 2
       num  = convert.call(110 - after_p)
-      @records << "▽\s" + num + "\s" + picked + koma + turned
+      covered = "同\s" if @records.last.include?(num)
+      @records << m.call("▽\s" + num + "\s" + covered + koma)
     end
-    #同〜が間違っている。↑リファクタリング。
+    reverse_motigoma if @immature != "new coder"
+    game
+  end
+#-----------------------------------------------------------------
+
+#----駒がなった時のレコードの記載--------------------------------------
+  def reverse_motigoma
+    m = method(:magenta_color)
+    @records.last.gsub!(/\p{Hiragana}/, "")
+    case @fs
+    when 1; @records.last << @immature + "\s成"
+    when 2; @records.last << m.call(@immature + "\s成")
+    end
+    @immature = "new coder"
   end
 #-----------------------------------------------------------------
 

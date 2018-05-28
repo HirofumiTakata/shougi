@@ -226,20 +226,18 @@ class ShougiApp
 
 #----ステージ７（盤へ駒の描画）----------------------------------------
   def phase_7
-    who_before = @b[@after_p]
     get_partner unless @b[@after_p] == "\s\s\s"
     @b[@after_p]  = @b[@before_p]
     zone_reverse if @after_p.to_s.match(/\d[123]/)
     @b[@before_p] = "\s\s\s"
-    record(who_before)
+    record
     game
   end
 #------------------------------------------------------------------
 
 #----投了or終了-----------------------------------------------------
   def alert_window(message)
-    log = caller
-    @log.push(log).flatten!
+    @log = caller
     puts @space_3 + @box_line
     puts @space_3 + "|            " + message + "               |"
     puts @space_3 + "|             1 : YES   2: NO                   |"
