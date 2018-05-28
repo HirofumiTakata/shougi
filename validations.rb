@@ -23,30 +23,33 @@ module Validations
 
 #----その駒が動ける範囲の場所を指定しているかどうか（その駒の動きに合っているかどうか）------
   def validate_2
+    kei = [-8,12]
     gin = [1,-9,9,-11,11]
     kin = [-1,1,-9,-10,10,11]
     ou  = [-1,1,-9,9,-10,10,-11,11]
     case @b[@before_p]
     when /歩/
-      validate_2_error unless @before_p - @after_p == 1
-      case @before_p.to_s
-      when /2$/; turn_army
-      end
+      validate_error unless @before_p - @after_p == 1
     when /桂/
-
+      validate_error unless kei.include?(@before_p - @after_p)
     when /銀/
-      validate_2_error unless gin.include?(@before_p - @after_p)
+      validate_error unless gin.include?(@before_p - @after_p)
     when /金|と|よ|け|ぎ/
-      validate_2_error unless kin.include?(@before_p - @after_p)
+      validate_error unless kin.include?(@before_p - @after_p)
     when /王|玉/
-      validate_2_error unless ou.include?(@before_p - @after_p)
+      validate_error unless ou.include?(@before_p - @after_p)
     else ; validate_3
     end
+    validate_4
   end
 
-  def validate_2_error
+  def validate_error
     r = method(:red_color)
-    puts @space_3 * 2 + r.call(@error_5)
+    c = caller
+    case c.first
+    when /validate_2/; puts @space_3 * 2 + r.call(@error_5)
+    when /validate_4/; puts @space_3 * 2 + r.call(@error_6)
+    end
     @after_p = gets.to_i
     phase_6
   end
@@ -65,6 +68,10 @@ module Validations
     when 21,31,41,51,61,71,81; fork_switch unless eval(n)
     end
   end
+  #歩が端まできたら強制的に成るロジック
+  # case @before_p.to_s
+  # when /2$/; turn_army
+  # end
 
   def fork_switch
   end
@@ -72,14 +79,22 @@ module Validations
 
 #----選んだ駒が動ける位置かどうかの確認----------------------------------------------
   def validate_3
+    #香車、角、飛車、距離が一以上の駒の動きの確認。間に自駒があればそこまでしか動けない。
 
+  end
+#-------------------------------------------------------------------------------
+
+#----選んだ位置が自分の駒だとエラー--------------------------------------------------
+  def validate_4
+    case @fs
+    when 1; validate_error if @b[@after_p] =~ /^\p{Han}|^\p{Hiragana}/
+    when 2; validate_error if @b[@after_p].include?("#")
+    end
   end
 #-------------------------------------------------------------------------------
 
 #----先手、後手で処理を分ける（周りの駒の確認）----------------------------------------
   def check_1_1(string, num)
-    puts "kitayo"
-    puts string
     color = method(:red_color)
     case @fs
     when 1

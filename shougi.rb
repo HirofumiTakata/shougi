@@ -208,10 +208,10 @@ class ShougiApp
     finish
     if @after_p < 11 || 99 < @after_p
       puts r.call(@error_1)
-      @after_p = gets.to_i; phase_7
+      phase_5
     elsif @after_p.to_s.include?("0") #20,30,40,50,60,70,80を除く
       puts r.call(@error_1)
-      @after_p = gets.to_i; phase_7
+      phase_5
     else
       validate_2
     end
