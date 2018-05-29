@@ -23,23 +23,45 @@ module Validations
 
 #----その駒が動ける範囲の場所を指定しているかどうか（その駒の動きに合っているかどうか）------
   def validate_2
-    kei = [-8,12]
-    gin = [1,-9,9,-11,11]
-    kin = [-1,1,-9,-10,10,11]
-    ou  = [-1,1,-9,9,-10,10,-11,11]
+    @gap = @before_p - @after_p
+    @kyo = [*(1..8)].reverse
+    @kei = [-8,12]
+    @gin = [1,-9,9,-11,11]
+    @kin = [-1,1,-9,-10,10,11]
+    @ou  = [-1,1,-9,9,-10,10,-11,11]
+    @kaku  = [9, 11, 18, 22, 27, 33, 36, 44, 45, 54, 55, 63, 66, 72, 77, 81, 88]
+    @hisha = [1, 2, 3, 4, 5, 6, 7, 8, 10, 20, 30, 40, 50, 60, 70, 80]
+    @bnum_1  = @before_p.to_s.chars[1].to_i
+    @bnum_10 = @before_p.to_s.chars[0].to_i
+    @anum_1  = @after_p.to_s.chars[1].to_i
+    @anum_10 = @after_p.to_s.chars[0].to_i
     case @b[@before_p]
     when /歩/
-      validate_error unless @before_p - @after_p == 1
+      corners
+      validate_error unless @gap == 1
+    when /香/
+      corners
+      validate_error unless @kyo.drop(9 - @bnum_1).include?(@gap)
     when /桂/
-      validate_error unless kei.include?(@before_p - @after_p)
+      particular
+      validate_error unless @kei.include?(@gap)
     when /銀/
-      validate_error unless gin.include?(@before_p - @after_p)
+      validate_error unless @gin.include?(@gap)
     when /金|と|よ|け|ぎ/
-      validate_error unless kin.include?(@before_p - @after_p)
+      validate_error unless @kin.include?(@gap)
     when /王|玉/
-      validate_error unless ou.include?(@before_p - @after_p)
-    else ; validate_3
+      validate_error unless @ou.include?(@gap)
+    when /角/
+      validate_error unless @kaku.include?(@gap.abs)
+    when /飛/
+      validate_error unless @hisha.include?(@gap.abs)
+    when /馬/
+      validate_error unless @kaku.concat(@ou).include?(@gap.abs)
+    when /龍/
+      validate_error unless @hisha.concat(@ou).include?(@gap.abs)
+    else
     end
+    validate_3
     validate_4
   end
 
@@ -47,7 +69,7 @@ module Validations
     r = method(:red_color)
     c = caller
     case c.first
-    when /validate_2/; puts @space_3 * 2 + r.call(@error_5)
+    when /validate_2|validate_3/; puts @space_3 * 2 + r.call(@error_5)
     when /validate_4/; puts @space_3 * 2 + r.call(@error_6)
     end
     @after_p = gets.to_i
@@ -55,32 +77,45 @@ module Validations
   end
 #-------------------------------------------------------------------------------
 
-#----動かす駒が、四隅、または上辺、右辺、下辺、左辺にいた場合の共通の処理------------------
-  def corners(ur="",lr="",ul="",ll="",e="",s="",w="",n="")
-    case @before_p
-    when 11; fork_switch unless eval(ur)
-    when 19; fork_switch unless eval(lr)
-    when 99; fork_switch unless eval(ul)
-    when 91; fork_switch unless eval(ll)
-    when 12..18; fork_switch unless eval(e)
-    when 29,39,49,59,69,79,89; fork_switch unless eval(s)
-    when 92..98; fork_switch unless eval(w)
-    when 21,31,41,51,61,71,81; fork_switch unless eval(n)
+#----歩、香車、桂馬に限り、強制的に成り駒になるパターン---------------------------------
+  def corners
+    #歩、香車が端まできたら強制的に成るロジック
+    case @before_p.to_s
+    when /2$/; turn_army
     end
   end
-  #歩が端まできたら強制的に成るロジック
-  # case @before_p.to_s
-  # when /2$/; turn_army
-  # end
 
-  def fork_switch
+  def particular
+    case @before_p.to_s
+    when /3$|4$/; turn_army
+    end
   end
 #-------------------------------------------------------------------------------
 
 #----選んだ駒が動ける位置かどうかの確認----------------------------------------------
   def validate_3
-    #香車、角、飛車、距離が一以上の駒の動きの確認。間に自駒があればそこまでしか動けない。
-
+    #香車、角、飛車、距離が一以上の駒の動きの確認。間に駒があればそこまでしか動けない。
+    @leftovers = []
+    distance  = (@after_p + 1)..(@before_p - 1)
+    rdistance = (@before_p + 1)..(@after_p - 1)
+    case @b[@before_p]
+    when /香/
+      if @b[distance].join =~ /\p{Han}|\p{Hiragana}/
+        validate_error
+      end
+    when /角|馬/
+    when /飛|龍/
+      if    0 < @gap && @anum_10 == @bnum_10 &&
+            @b[distance].join =~ /\p{Han}|\p{Hiragana}/
+            validate_error
+      elsif @gap < 0 && @anum_10 == @bnum_10 &&
+            @b[rdistance].join =~ /\p{Han}|\p{Hiragana}/
+            validate_error
+      # elsif 0 < @gap && @anum_1 == @bnum_1 &&
+      #
+      # elsif @gap < 0 && @anum_1 == @bnum_1 &&
+      end
+    end
   end
 #-------------------------------------------------------------------------------
 

@@ -444,14 +444,14 @@ module Methods
 #----持駒を配備する-------------------------------------------------
   def deploy_player
     r = method(:red_color)
-    puts "\s" + @message_g_6
+    puts @space_3 * 2 + @message_g_6
     @after_p = gets.to_i
     finish
     if @after_p < 11 || 99 < @after_p
-      puts r.call(@error_1)
+      puts @space_3 * 2 + r.call(@error_1)
       deploy_player
     elsif @after_p.to_s.include?("0") #20,30,40,50,60,70,80を除く
-      puts r.call(@error_1)
+      puts @space_3 * 2 + r.call(@error_1)
       deploy_player
     else
     end
@@ -467,7 +467,7 @@ module Methods
     if @b[@after_p] == "\s\s\s"
       @b[@after_p] = c.call(@motigoma_list[@manage_outsider])
     else
-      puts r.call(@error_4)
+      puts @space_3 * 2 + r.call(@error_4)
       deploy_player
     end
     case @fs
