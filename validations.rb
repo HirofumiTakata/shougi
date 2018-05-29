@@ -147,34 +147,9 @@ module Validations
   end
 #-------------------------------------------------------------------------------
 
-#----先手、後手で処理を分ける（周りの駒の確認）----------------------------------------
-  def check_1_2
-    case @b[@before_p]
-    when /歩/;
-    when /香/;
-    when /桂/;
-    when /銀/;
-    when /金/;
-    when /王/;
-    when /玉/;
-    when /角/;
-    when /飛/;
-    #成駒
-    when /と/;
-    when /よ/;
-    when /け/;
-    when /ぎ/;
-    when /馬/;
-    when /龍/;
-    else
-    end
-  end
-#-------------------------------------------------------------------------------
-
 #----選んだ駒が何かの判別、選んだ駒が動ける場所があるか---------------------------------
   def check_1
     finish
-    # check_1_2 if @corners.include?(@before_p)
     case @b[@before_p]
     when /歩|香/;  ahead; check_1_1(@ahead, 1)
     when /桂/; jump_2; check_1_1(@jump_2, 2)
