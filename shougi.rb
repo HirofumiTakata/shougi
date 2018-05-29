@@ -125,7 +125,10 @@ class ShougiApp
   def game
     @count += 1
     #とりあえず。入玉や持駒の点数を確かめる必要がある。
-    tied_game if 180 < @count
+    if 180 < @count
+      puts @space_3 + @message_g_9
+      tied_game
+    end
     @count.even? ? @fs = 1 : @fs = 2
     if @count == 0
       display_ban

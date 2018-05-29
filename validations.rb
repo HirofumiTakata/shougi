@@ -103,6 +103,8 @@ module Validations
       if @b[distance].join =~ /\p{Han}|\p{Hiragana}/
         validate_error
       end
+      oute if @b[@after_p] =~ /王/ && @fs == 1
+      oute if @b[@after_p] =~ /玉/ && @fs == 2
     when /角|馬/
     when /飛|龍/
       if    0 < @gap && @anum_10 == @bnum_10 &&
@@ -129,7 +131,7 @@ module Validations
 #-------------------------------------------------------------------------------
 
 #----先手、後手で処理を分ける（周りの駒の確認）----------------------------------------
-  def check_1_1(string, num)
+  def check_2(string, num)
     color = method(:red_color)
     case @fs
     when 1
@@ -151,15 +153,15 @@ module Validations
   def check_1
     finish
     case @b[@before_p]
-    when /歩|香/;  ahead; check_1_1(@ahead, 1)
-    when /桂/; jump_2; check_1_1(@jump_2, 2)
-    when /銀/;  ahead;     x; check_1_1(@ahead | @x, 5)
-    when /金|と|よ|け|ぎ/; gold_2; cross; check_1_1(@gold_2 | @cross, 6)
-    when /王|玉/;      x; cross; check_1_1(@x | @cross, 8)
-    when /角/;      x; check_1_1(@x, 4)
-    when /飛/;  cross; check_1_1(@cross, 4)
-    when /馬/;      x; cross; check_1_1(@x | @cross, 8)
-    when /龍/;      x; cross; check_1_1(@x | @cross, 8)
+    when /歩|香/;  ahead; check_2(@ahead, 1)
+    when /桂/; jump_2; check_2(@jump_2, 2)
+    when /銀/;  ahead;     x; check_2(@ahead | @x, 5)
+    when /金|と|よ|け|ぎ/; gold_2; cross; check_2(@gold_2 | @cross, 6)
+    when /王|玉/;      x; cross; check_2(@x | @cross, 8)
+    when /角/;      x; check_2(@x, 4)
+    when /飛/;  cross; check_2(@cross, 4)
+    when /馬/;      x; cross; check_2(@x | @cross, 8)
+    when /龍/;      x; cross; check_2(@x | @cross, 8)
     else
     end
   end
