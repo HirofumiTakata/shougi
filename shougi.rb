@@ -130,7 +130,13 @@ class ShougiApp
     if @count == 0
       display_ban
     else
+      [*(0..10)].each { |i| @b[i] = "\s\s\s" }
+      [*(100..110)].each { |i| @b[i] = "\s\s\s" }
+      [20,30,40,50,60,70,80,90].each { |i| @b[i] = "\s\s\s" }
       @b = @b.reverse #先手後手で将棋盤を上下させる
+      [20,30,40,50,60,70,80,90].each { |i| @b[i] = "壁#" }
+      [*(0..10)].each { |i| @b[i] = "壁#" }
+      [*(100..110)].each { |i| @b[i] = "壁#" }
       display_ban
     end
     phase_1
